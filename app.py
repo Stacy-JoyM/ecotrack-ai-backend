@@ -24,6 +24,11 @@ def create_app(config_name=None):
     CORS(app)
     jwt.init_app(app)
     
+    # Import models to ensure they're registered with SQLAlchemy
+    # This must be done after db.init_app() but before registering blueprints
+    with app.app_context():
+        import models.chat  # Import chat models
+    
     # Register blueprints
     from routes import register_blueprints
     register_blueprints(app)
