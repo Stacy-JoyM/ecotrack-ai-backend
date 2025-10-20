@@ -91,15 +91,6 @@ DATABASE_URL=sqlite:///app.db
 JWT_SECRET_KEY=your-jwt-secret-key
 ```
 
-Create `.env.example` (commit this):
-```
-FLASK_APP=app.py
-FLASK_ENV=development
-SECRET_KEY=
-DATABASE_URL=
-JWT_SECRET_KEY=
-```
-
 ### 7. Initialize Database
 ```bash
 flask db init
