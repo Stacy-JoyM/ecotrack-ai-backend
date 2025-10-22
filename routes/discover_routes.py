@@ -1,13 +1,11 @@
-# routes/discover_routes.py
 from flask import Blueprint, request, jsonify
 import os
 import json
-from services.discover_service import geocode_place  # Use your existing service
-from utils import haversine_distance  # You'll create utils.py
+from services.discover_service import geocode_place  
+from utils import haversine_distance  
 
 discover_bp = Blueprint('discover', __name__)
 
-# Load places for /search endpoint
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 PLACES_FILE = os.path.join(DATA_DIR, 'places.json')
 
@@ -18,14 +16,12 @@ else:
     ALL_PLACES = []
     print("⚠️ Warning: data/places.json not found. /search will return empty results.")
 
-# === Existing /geocode endpoint (FIXED) ===
 @discover_bp.route('/geocode', methods=['GET'])
 def geocode():
     place = request.args.get('place', '').strip()
     if not place:
         return jsonify({"error": "The 'place' query parameter is required."}), 400
 
-    # Use your service function (which already handles API key and encoding)
     coords = geocode_place(place)
     if not coords:
         return jsonify({"error": "Location not found or geocoding failed."}), 404
@@ -35,7 +31,6 @@ def geocode():
         "place_name": place
     })
 
-# === New /search endpoint (for categories + distance) ===
 @discover_bp.route('/search', methods=['GET'])
 def search_places():
     query = request.args.get('q', '').lower().strip()
@@ -49,7 +44,7 @@ def search_places():
     for place in ALL_PLACES:
         match = False
         if not query:
-            match = True  # Show all
+            match = True  
         else:
             searchable = (
                 place["name"].lower() +
