@@ -1,5 +1,5 @@
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -33,6 +33,22 @@ def create_app(config_name=None):
     from routes import register_blueprints
     register_blueprints(app)
     
+    @app.route('/')
+    def index():
+       return jsonify({
+        'message': 'Carbon Footprint Tracker API',
+        'version': '1.0',
+        'endpoints': {
+            'activity': '/api/activity',
+            'carbon': '/api/carbon',
+            'chatbot': '/api/chatbot',
+            'dashboard': '/api/dashboard',
+            'discover': '/api/discover',
+            'user': '/api/user',
+
+        }
+       })
+
     @app.route('/health')
     def health_check():
         return {'status': 'healthy', 'message': 'Backend is running'}, 200
