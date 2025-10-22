@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Green Grocers Market",
+    "category": "Food",
+    "keywords": ["organic", "groceries", "zero waste", "vegetables", "food"],
+    "lat": -0.1029,
+    "lng": 34.7542,
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "name": "Eco Cycle Center",
+    "category": "Transport",
+    "keywords": ["bike", "ebike", "repair", "cycle", "transport"],
+    "lat": -0.1100,
+    "lng": 34.7600,
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "Solar Living Hub",
+    "category": "Energy",
+    "keywords": ["solar", "panels", "renewable", "energy", "clean"],
+    "lat": -0.0900,
+    "lng": 34.7800,
+    "rating": 4.9
+  },
+  {
+    "id": 4,
+    "name": "Kisumu E-Bike Rentals",
+    "category": "Transport",
+    "keywords": ["ebike", "rental", "electric bike", "transport"],
+    "lat": -0.1050,
+    "lng": 34.7500,
+    "rating": 4.7
+  },
+  {
+    "id": 5,
+    "name": "Eco Fashion Boutique",
+    "category": "Shopping",
+    "keywords": ["clothes", "sustainable", "fashion", "shopping", "cotton"],
+    "lat": -0.1000,
+    "lng": 34.7520,
+    "rating": 4.5
+  },
+  {
+    "id": 6,
+    "name": "Green Recycling Depot",
+    "category": "Recycling",
+    "keywords": ["recycle", "plastic", "paper", "waste", "recycling"],
+    "lat": -0.1150,
+    "lng": 34.7400,
+    "rating": 4.4
+  }
+]
