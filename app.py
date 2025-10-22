@@ -18,18 +18,15 @@ def create_app(config_name=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     
-    # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     CORS(app)
     jwt.init_app(app)
     
-    # Import models to ensure they're registered with SQLAlchemy
-    # This must be done after db.init_app() but before registering blueprints
-    with app.app_context():
-        import models.chat  # Import chat models
     
-    # Register blueprints
+    with app.app_context():
+        import models.chat 
+
     from routes import register_blueprints
     register_blueprints(app)
     
