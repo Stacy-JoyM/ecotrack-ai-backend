@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -6,6 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from config import config
 import os
+import logging
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -14,26 +14,30 @@ jwt = JWTManager()
 def create_app(config_name=None):
     if config_name is None:
         config_name = os.getenv('FLASK_ENV', 'development')
-    
+
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    
+
     db.init_app(app)
     migrate.init_app(app, db)
     CORS(app)
     jwt.init_app(app)
-    
-    
+
+    logging.basicConfig(level=logging.INFO)
+
     with app.app_context():
-        import models.chat 
+        import models.chat
+        import models.discover
+        import models.activity
+        import models.user
 
     from routes import register_blueprints
     register_blueprints(app)
-    
+
     @app.route('/health')
     def health_check():
         return {'status': 'healthy', 'message': 'Backend is running'}, 200
-    
+
     return app
 
 if __name__ == '__main__':
