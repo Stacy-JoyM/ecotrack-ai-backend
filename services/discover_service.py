@@ -1,10 +1,12 @@
+import requests
+
 def geocode_place(place_name):
     """
     Geocode a place name to latitude and longitude using OpenStreetMap Nominatim.
     """
     if not place_name or not isinstance(place_name, str):
         return None
-        
+
     url = "https://nominatim.openstreetmap.org/search"
     params = {
         'q': place_name.strip(),
