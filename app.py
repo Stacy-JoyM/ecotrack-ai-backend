@@ -6,6 +6,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from config import config
 import os
+from datetime import timedelta
+import logging
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -17,18 +19,35 @@ def create_app(config_name=None):
     
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    app.config['JWT_SECRET_KEY'] = 'jwt-secret-key-change-this'  # Change this too
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)  # Token expires in 24 hours
+    app.config['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
     
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app)
+     # Initialize extensions
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
     jwt.init_app(app)
     
+    logging.basicConfig(level=logging.INFO)
     
     with app.app_context():
-        import models.chat 
+        import models.chat
+        import models.discover
+        import models.activity
+        import models.user
+        db.create_all()
+        
 
     from routes import register_blueprints
     register_blueprints(app)
+
     
     @app.route('/')
     def index():

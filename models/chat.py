@@ -8,7 +8,7 @@ class Conversation(db.Model):
     __tablename__ = 'conversations'
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     session_id = db.Column(db.String(255), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -77,7 +77,7 @@ class AIRecommendation(db.Model):
     __tablename__ = 'ai_recommendations'
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id'), nullable=True)
     recommendation_type = db.Column(db.String(100), nullable=False)  # 'carbon_reduction', 'activity_suggestion', etc.
     title = db.Column(db.String(255), nullable=False)
