@@ -2,8 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import requests
 import os
-
-db = SQLAlchemy()
+from app import db
 
 class Activity(db.Model):
     """Base Activity Model"""
