@@ -8,10 +8,12 @@ from config import config
 import os
 from datetime import timedelta
 import logging
+from extensions import bcrypt
 
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
+
 
 def create_app(config_name=None):
     if config_name is None:
@@ -34,14 +36,10 @@ def create_app(config_name=None):
         }
     })
     jwt.init_app(app)
-    
+    bcrypt.init_app(app) 
     logging.basicConfig(level=logging.INFO)
     
     with app.app_context():
-        import models.chat
-        import models.discover
-        import models.activity
-        import models.user
         db.create_all()
         
 

@@ -25,7 +25,7 @@ class User(db.Model):
     carbon = db.relationship('Carbon', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     goals = db.relationship('Goal', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     activities = db.relationship('Activity', backref='user', lazy='dynamic', cascade='all, delete-orphan')
-    conversations = db.relationship('Conversation', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    #conversations = db.relationship('Conversation', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     
     @property
     def display_name(self):

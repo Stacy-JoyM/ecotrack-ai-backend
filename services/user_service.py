@@ -1,10 +1,10 @@
 from app import db
 from models.user import User
-from flask_bcrypt import Bcrypt
+from extensions import bcrypt
 from flask_jwt_extended import create_access_token
 from datetime import timedelta
 
-bcrypt = Bcrypt()
+
 
 class UserService:
     """Handles all user-related operations like registration, login, and retrieval."""
@@ -12,8 +12,7 @@ class UserService:
     def register_user(self, data):
         email = data.get('email')
         password = data.get('password')
-        name = data.get('name')
-        username = data.get('username') or email.split('@')[0]  # Generate username from email if not provided
+        username = data.get('username') 
 
         if not email or not password:
             return {"message": "Email and password required", "status": 400}
@@ -30,7 +29,6 @@ class UserService:
         new_user = User(
             email=email,
             username=username,
-            name=name,
             password_hash=hashed_pw
         )
 
@@ -41,8 +39,8 @@ class UserService:
         new_user.update_last_login()
         db.session.commit()
 
-        token = create_access_token(identity=email, expires_delta=timedelta(hours=6))
-        return {"message": "User registered successfully", "token": token, "status": 201}
+        access_token = create_access_token(identity=email, expires_delta=timedelta(hours=6))
+        return {"message": "User registered successfully", "access_token": access_token, "status": 201}
 
     def login_user(self, data):
         email = data.get('email')
@@ -59,8 +57,8 @@ class UserService:
         user.update_last_login()
         db.session.commit()
 
-        token = create_access_token(identity=email, expires_delta=timedelta(hours=6))
-        return {"message": "Login successful", "token": token, "status": 200}
+        access_token = create_access_token(identity=email, expires_delta=timedelta(hours=6))
+        return {"message": "Login successful", "access_token": access_token, "status": 200}
 
     def get_user_by_email(self, email):
         """Retrieve a user's details by email."""
