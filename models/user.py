@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime, timedelta
+from extensions import bcrypt
 
 class User(db.Model):
 
@@ -22,7 +23,7 @@ class User(db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     
     # Relationships
-    carbon = db.relationship('Carbon', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    #carbon = db.relationship('Carbon', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     goals = db.relationship('Goal', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     activities = db.relationship('Activity', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     #conversations = db.relationship('Conversation', backref='user', lazy='dynamic', cascade='all, delete-orphan')
@@ -50,12 +51,10 @@ class User(db.Model):
     
     # Instance Methods
     def set_password(self, password):
-        from werkzeug.security import generate_password_hash
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
     
     def check_password(self, password):
-        from werkzeug.security import check_password_hash
-        return check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
     
     def update_last_login(self):
         self.last_login = datetime.utcnow()
