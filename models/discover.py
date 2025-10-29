@@ -2,7 +2,7 @@ from app import db
 from datetime import datetime
 
 class Discover(db.Model): 
-    __tablename__ = 'discovers'  
+    __tablename__ = 'discovers'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
