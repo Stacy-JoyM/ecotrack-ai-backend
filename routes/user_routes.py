@@ -126,13 +126,10 @@ def login():
         }), 500
 
 
+
 @user_bp.route('/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
-    """
-    Get current user's profile
-    Requires: Authorization header with Bearer token
-    """
     try:
         current_user_email = get_jwt_identity()
         user_data = user_service.get_user_by_email(current_user_email)
@@ -152,4 +149,135 @@ def get_profile():
         return jsonify({
             'success': False,
             'message': f'Failed to get profile: {str(e)}'
+        }), 500
+
+
+@user_bp.route('/profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    """
+    Update user profile
+    Requires: Authorization header with Bearer token
+    Expected JSON: { "name": "John Doe", "carbon_goal": 48.0, "bio": "...", "location": "...", "lifestyle_type": "..." }
+    """
+    try:
+        current_user_email = get_jwt_identity()
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'No data provided'
+            }), 400
+        
+        result = user_service.update_profile(current_user_email, data)
+        status_code = result.pop('status', 200)
+        
+        if status_code == 200:
+            # Get updated user data
+            user_data = user_service.get_user_by_email(current_user_email)
+            
+            return jsonify({
+                'success': True,
+                'message': result.get('message'),
+                'user': user_data
+            }), status_code
+        else:
+            return jsonify({
+                'success': False,
+                'message': result.get('message')
+            }), status_code
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        
+        return jsonify({
+            'success': False,
+            'message': f'Failed to update profile: {str(e)}'
+        }), 500
+
+
+@user_bp.route('/change-password', methods=['PUT'])
+@jwt_required()
+def change_password():
+    try:
+        current_user_email = get_jwt_identity()
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'No data provided'
+            }), 400
+        
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        
+        if not current_password or not new_password:
+            return jsonify({
+                'success': False,
+                'message': 'Current password and new password required'
+            }), 400
+        
+        if len(new_password) < 6:
+            return jsonify({
+                'success': False,
+                'message': 'New password must be at least 6 characters'
+            }), 400
+        
+        result = user_service.change_password(current_user_email, current_password, new_password)
+        status_code = result.pop('status', 200)
+        
+        return jsonify({
+            'success': status_code == 200,
+            'message': result.get('message')
+        }), status_code
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        
+        return jsonify({
+            'success': False,
+            'message': f'Failed to change password: {str(e)}'
+        }), 500
+
+
+@user_bp.route('/profile', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    try:
+        current_user_email = get_jwt_identity()
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'No data provided'
+            }), 400
+        
+        password = data.get('password')
+        
+        if not password:
+            return jsonify({
+                'success': False,
+                'message': 'Password required to confirm account deletion'
+            }), 400
+        
+        result = user_service.delete_account(current_user_email, password)
+        status_code = result.pop('status', 200)
+        
+        return jsonify({
+            'success': status_code == 200,
+            'message': result.get('message')
+        }), status_code
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        
+        return jsonify({
+            'success': False,
+            'message': f'Failed to delete account: {str(e)}'
         }), 500

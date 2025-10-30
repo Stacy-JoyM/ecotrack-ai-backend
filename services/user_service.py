@@ -55,3 +55,69 @@ class UserService:
         """Retrieve a user's details by email."""
         user = User.query.filter_by(email=email).first()
         return user.to_dict() if user else None  
+    
+    def update_profile(self, email, data):
+        """Update user profile information."""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            return {"message": "User not found", "status": 404}
+        
+        # Update allowed fields
+        if 'name' in data:
+            user.name = data['name']
+        if 'bio' in data:
+            user.bio = data['bio']
+        if 'location' in data:
+            user.location = data['location']
+        if 'lifestyle_type' in data:
+            user.lifestyle_type = data['lifestyle_type']
+        if 'carbon_goal' in data:
+            user.carbon_goal = data['carbon_goal']
+        
+        try:
+            db.session.commit()
+            return {"message": "Profile updated successfully", "status": 200}
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"Failed to update profile: {str(e)}", "status": 500}
+    
+    def change_password(self, email, current_password, new_password):
+        """Change user password."""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            return {"message": "User not found", "status": 404}
+        
+        # Verify current password
+        if not user.check_password(current_password):
+            return {"message": "Current password is incorrect", "status": 401}
+        
+        # Update to new password
+        user.set_password(new_password)
+        
+        try:
+            db.session.commit()
+            return {"message": "Password changed successfully", "status": 200}
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"Failed to change password: {str(e)}", "status": 500}
+    
+    def delete_account(self, email, password):
+        """Delete user account (requires password confirmation)."""
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            return {"message": "User not found", "status": 404}
+        
+        # Verify password before deletion
+        if not user.check_password(password):
+            return {"message": "Incorrect password", "status": 401}
+        
+        try:
+            db.session.delete(user)
+            db.session.commit()
+            return {"message": "Account deleted successfully", "status": 200}
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"Failed to delete account: {str(e)}", "status": 500}
