@@ -66,6 +66,7 @@ pyparsing==3.2.5
 pytest==8.3.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+psycopg2-binary==2.9.9
 pytz==2024.2
 requests==2.32.4
 rsa==4.9.1
