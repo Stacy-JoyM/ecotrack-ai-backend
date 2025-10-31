@@ -22,16 +22,15 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///carbon_tracker_dev.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') 
     SQLALCHEMY_ECHO = True  # Log SQL queries
 
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'postgresql://user:password@localhost/carbon_tracker'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or \
+        'postgresql://ecotrack_db_v644_user:7eKFExQWyme9jzF7ryEejLGr2omusg0z@dpg-d41rou7diees73barac0-a.oregon-postgres.render.com/ecotrack_db_v644'
     SQLALCHEMY_ECHO = False
     
     # Production-specific settings
