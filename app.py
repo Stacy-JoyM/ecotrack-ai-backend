@@ -62,3 +62,12 @@ def create_app(config_name=None):
         return {'status': 'healthy', 'message': 'Backend is running'}, 200
 
     return app
+
+
+if __name__ == '__main__':
+    # Production-ready server with Waitress
+    from waitress import serve
+
+    app = create_app()
+    port = int(os.environ.get("PORT", 8080))  # Render uses PORT env variable
+    serve(app, host="0.0.0.0", port=port)
